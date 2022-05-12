@@ -1,0 +1,82 @@
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Vigenère cipher Mohamad Rizky Isa</title>
+
+	<link rel="stylesheet" href="https://cdn.usebootstrap.com/bootstrap/4.4.1/css/bootstrap.min.css">
+	<style>
+		textarea {display: block; width: 100%; height: 300px; margin-bottom: 10px; padding: 10px;}
+		input {display: block; margin-bottom: 10px; padding: 10px;}
+	</style>
+</head>
+<body>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-xs-12 col-sm-6 col-sm-offset-3">
+				<h3>Vigenère Cipher Algorithm</h3>
+				<textarea id="userText" placeholder="What is your secret message?"></textarea>
+				<input id="keyword" type="text" placeholder="keyword"></input>
+				<button id="encrypt" class="btn btn-default" type="submit">Encrypt</button>
+			</div>
+		</div>
+	</div>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+	<script>
+			var encryptBtn = $("#encrypt");
+			function isUpperCase(letter){
+			  var l = letter.charCodeAt();
+			  if(l >= 65 && l <= 90){
+			    return true;
+			  }else{
+			    return false;
+			  }
+			};
+
+			function isLowerCase(letter){
+			  var l = letter.charCodeAt();
+			  if(l >= 97 && l <= 122){
+			    return true;
+			  }else{
+			    return false;
+			  }
+			};
+
+			var encrypt = function(plainMsg, key){
+			  var cypher = "";
+			  for(var i = 0, j = 0; i < plainMsg.length; i++){
+			    var currentLetter = plainMsg[i];
+
+			    if(isUpperCase(currentLetter)){
+			      var upperLetter = ((currentLetter.charCodeAt() - 65) + (key[j%key.length].toUpperCase().charCodeAt() - 65)) % 26;
+			      cypher += String.fromCharCode(upperLetter+65);
+			      j++;
+			    }else if(isLowerCase(currentLetter)){
+			      var lowerLetter = ((currentLetter.charCodeAt() - 97) + (key[j%key.length].toLowerCase().charCodeAt() - 97)) % 26;
+			      cypher += String.fromCharCode(lowerLetter+97);
+			      j++;
+			    }else{
+			      cypher += currentLetter;
+			    }
+			  }
+			  return cypher;
+			};
+
+			$(document).ready(function(){
+
+			  encryptBtn.on("click", function(){
+			    var plainMsg = $("#userText");
+			    var keyword = $("#keyword");
+
+			    if(plainMsg.val() == "" || keyword.val() == "" ){
+			      alert("Please type both secret message and keyword!");
+			    }else{
+			      plainMsg.val(encrypt(plainMsg.val(), keyword.val()));
+			    }
+			  });
+
+			});
+	</script>
+</body>
+</html>
